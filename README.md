@@ -51,43 +51,6 @@ WALMART_FACT_TABLE — weekly sales joined to weather, fuel price, CPI, unemploy
 Every chart is a single, full-width visualization — no cluttered multi-panel subplots. KPI context (totals, percentage shares, best-performing segments) is folded directly into each chart title rather than tucked away in a separate pie chart or stat card.
 
 
-⚙️ Setup & Usage
-
-bash# 1. Clone and install dependencies
-git clone https://github.com/<you>/walmart-de-project.git
-cd walmart-de-project
-pip install snowflake-connector-python pandas matplotlib seaborn python-dotenv
-
-# 2. Configure Snowflake credentials
-cp .env.example .env
-# edit .env with your SNOWFLAKE_* values
-
-# 3. Run the Snowflake setup scripts (in order)
-snowflake/01_storage_integration.sql
-snowflake/02_file_format_and_stage.sql
-snowflake/03_create_bronze_tables.sql
-snowflake/04_copy_into_bronze.sql
-
-# 4. Run dbt
-cd dbt_project
-dbt run --select staging
-dbt snapshot
-dbt run --select marts
-dbt test
-
-# 5. Generate all 10 charts
-cd ../visualizations
-python walmart_visualizations.py
-
-.env template:
-
-envSNOWFLAKE_ACCOUNT=orgname-accountname.snowflakecomputing.com
-SNOWFLAKE_USER=your_user
-SNOWFLAKE_PASSWORD=your_password
-SNOWFLAKE_WAREHOUSE=COMPUTE_WH
-SNOWFLAKE_DATABASE=MYDB_PROJECT4
-SNOWFLAKE_SCHEMA=GOLD
-SNOWFLAKE_ROLE=WALMART_ROLE
 
 
 🧩 Key Design Decisions
@@ -102,7 +65,7 @@ Python over a BI tool for final visuals — querying Snowflake directly via snow
 
 📁 Repo Structure
 
-walmart-de-project/
+walmart_end_to_end_project/
 ├── README.md
 ├── architecture/architecture_diagram.png
 ├── ingestion/upload_to_s3.py
