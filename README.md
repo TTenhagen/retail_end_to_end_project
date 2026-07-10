@@ -21,8 +21,8 @@ Walmart needs a single source of truth for weekly sales performance across store
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────────────────────┐     ┌────────────────┐
-│  Local CSVs │ ──▶ │   AWS S3     │ ──▶ │         SNOWFLAKE                │ ──▶ │  Python Charts  │
-│  (3 files)  │     │ (raw landing)│     │  Bronze → Silver → Gold (dbt)    │     │ (matplotlib/sns)│
+│  Local CSVs │ ──▶ │   AWS S3     │ ──▶│         SNOWFLAKE               │ ──▶│  Python Charts │
+│  (3 files)  │     │ (raw landing)│     │  Bronze → Silver → Gold (dbt)   │     │(matplotlib/sns)│
 └─────────────┘     └──────────────┘     └─────────────────────────────────┘     └────────────────┘
                                                    ▲
                                           dbt Cloud orchestrates
