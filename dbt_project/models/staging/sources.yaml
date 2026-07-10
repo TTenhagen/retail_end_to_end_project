@@ -1,0 +1,12 @@
+version: 2
+sources:
+    - name: walmart_bronze
+      database: MYDB_PROJECT4
+      schema: WALMART_BRONZE
+      tables:
+        - name: stores_raw
+          description: "Raw stores data — all columns VARCHAR"
+        - name: fact_raw
+          description: "Raw weather, fuel, markdowns — NA strings converted to NULL at load"
+        - name: department_raw
+          description: "Raw weekly department sales"
