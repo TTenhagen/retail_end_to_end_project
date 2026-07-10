@@ -2,6 +2,11 @@
 
 **End-to-end Medallion-architecture data pipeline transforming raw weekly sales data into a governed, query-ready dimensional model — with a Python visualization layer querying the warehouse directly.**
 
+![AWS](https://img.shields.io/badge/AWS-S3-FF9900?logo=amazonaws&logoColor=white)
+![Snowflake](https://img.shields.io/badge/Snowflake-Data%20Warehouse-29B5E8?logo=snowflake&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-Cloud-FF694B?logo=dbt&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
@@ -21,7 +26,7 @@ Walmart needs a single source of truth for weekly sales performance across store
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────────────────────┐     ┌────────────────┐
-│  Local CSVs │ ──▶ │   AWS S3     │ ──▶│         SNOWFLAKE               │ ──▶│  Python Charts │
+│  Local CSVs │ ──▶|   AWS S3      │ ──▶│         SNOWFLAKE               │ ──▶│  Python Charts │
 │  (3 files)  │     │ (raw landing)│     │  Bronze → Silver → Gold (dbt)   │     │(matplotlib/sns)│
 └─────────────┘     └──────────────┘     └─────────────────────────────────┘     └────────────────┘
                                                    ▲
@@ -44,9 +49,9 @@ Walmart needs a single source of truth for weekly sales performance across store
 **Gold layer — star schema:**
 
 ```
-                    WALMART_DATE_DIM (SCD1)
-                             │
-                             ▼
+                     WALMART_DATE_DIM (SCD1)
+                           │
+                           ▼
 WALMART_STORE_DIM ──▶ WALMART_FACT_TABLE ◀── (sales, markdowns, weather, CPI)
    (SCD2, dbt
     snapshot)
@@ -76,6 +81,7 @@ WALMART_STORE_DIM ──▶ WALMART_FACT_TABLE ◀── (sales, markdowns, weat
 Every chart is a **single, full-width visualization** — no cluttered multi-panel subplots. KPI context (totals, percentage shares, best-performing segments) is folded directly into each chart title rather than tucked away in a separate pie chart or stat card.
 
 ---
+
 
 
 
