@@ -2,12 +2,6 @@
 
 **End-to-end Medallion-architecture data pipeline transforming raw weekly sales data into a governed, query-ready dimensional model — with a Python visualization layer querying the warehouse directly.**
 
-![AWS](https://img.shields.io/badge/AWS-S3-FF9900?logo=amazonaws&logoColor=white)
-![Snowflake](https://img.shields.io/badge/Snowflake-Data%20Warehouse-29B5E8?logo=snowflake&logoColor=white)
-![dbt](https://img.shields.io/badge/dbt-Cloud-FF694B?logo=dbt&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-green)
-
 ---
 
 ## 📋 Overview
