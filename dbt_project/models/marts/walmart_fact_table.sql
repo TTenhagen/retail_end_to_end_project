@@ -20,7 +20,7 @@ SELECT
     CURRENT_TIMESTAMP() as insert_date,
     CURRENT_TIMESTAMP() as update_date
 FROM {{ ref("stg_department") }} dept
-JOIN {{ ref("walmart_store_dim") }} sd
+JOIN {{ ref("retail_store_dim") }} sd
     ON dept.store_id = sd.store_id
     AND dept.dept_id = sd.dept_id
     AND dept.store_date BETWEEN sd.dbt_valid_from
@@ -28,6 +28,6 @@ JOIN {{ ref("walmart_store_dim") }} sd
 JOIN {{ ref("stg_fact") }} f
     ON dept.store_id = f.store_id
     AND dept.store_date  = f.store_date
-JOIN {{ ref("walmart_date_dim") }} dd
+JOIN {{ ref("retail_date_dim") }} dd
     on dept.store_date = dd.store_date
 ;
