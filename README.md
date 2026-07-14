@@ -1,4 +1,4 @@
-# 🛒 Walmart Retail Sales Analytics
+# 🛒 Retail Sales Analytics
 
 **End-to-end Medallion-architecture data pipeline transforming raw weekly sales data into a governed, query-ready dimensional model — with a Python visualization layer querying the warehouse directly.**
 
@@ -6,7 +6,7 @@
 
 ## 📋 Overview
 
-Walmart needs a single source of truth for weekly sales performance across stores and departments — one that accounts for seasonality, holiday effects, regional economic conditions, and promotional markdowns. This project builds that source of truth from three flat source files into a fully governed Snowflake warehouse, then delivers the 10 specific business reports stakeholders asked for, generated directly in Python with no BI tool dependency.
+The retailer needs a single source of truth for weekly sales performance across stores and departments — one that accounts for seasonality, holiday effects, regional economic conditions, and promotional markdowns. This project builds that source of truth from three flat source files into a fully governed Snowflake warehouse, then delivers the 10 specific business reports stakeholders asked for, generated directly in Python with no BI tool dependency.
 
 **The numbers:**
 - **421,570** weekly department-sales records
@@ -44,17 +44,17 @@ Walmart needs a single source of truth for weekly sales performance across store
 **Gold layer — star schema:**
 
 ```
-                  WALMART_DATE_DIM (SCD1)
+                  RETAIL_DATE_DIM (SCD1)
                            │
                            ▼
-WALMART_STORE_DIM ──▶ WALMART_FACT_TABLE ◀── (sales, markdowns, weather, CPI)
+RETAIL_STORE_DIM ──▶ RETAIL_FACT_TABLE ◀── (sales, markdowns, weather, CPI)
    (SCD2, dbt
     snapshot)
 ```
 
-- `WALMART_DATE_DIM` — one row per calendar date (~143 dates), holiday flag (SCD1: simple upsert)
-- `WALMART_STORE_DIM` — store type, size, tracked historically via `dbt snapshot` (SCD2: `dbt_valid_from` / `dbt_valid_to`). Snapshot grain is `store_id || '_' || dept_id` (~4,455 rows = 45 stores × 99 depts), using the `check` strategy on `store_type`/`store_size` with `invalidate_hard_deletes` enabled
-- `WALMART_FACT_TABLE` — weekly sales joined to weather, fuel price, CPI, unemployment, and 5 markdown columns; joins to the store dimension **point-in-time** via `store_date BETWEEN dbt_valid_from AND COALESCE(dbt_valid_to, '9999-12-31')`, so each sales row lands on the store version that was live that week
+- `RETAIL_DATE_DIM` — one row per calendar date (~143 dates), holiday flag (SCD1: simple upsert)
+- `RETAIL_STORE_DIM` — store type, size, tracked historically via `dbt snapshot` (SCD2: `dbt_valid_from` / `dbt_valid_to`). Snapshot grain is `store_id || '_' || dept_id` (~4,455 rows = 45 stores × 99 depts), using the `check` strategy on `store_type`/`store_size` with `invalidate_hard_deletes` enabled
+- `RETAIL_FACT_TABLE` — weekly sales joined to weather, fuel price, CPI, unemployment, and 5 markdown columns; joins to the store dimension **point-in-time** via `store_date BETWEEN dbt_valid_from AND COALESCE(dbt_valid_to, '9999-12-31')`, so each sales row lands on the store version that was live that week
 
 ---
 
@@ -90,7 +90,7 @@ Every chart is a **single, full-width visualization** — no cluttered multi-pan
 ## 📁 Repo Structure
 
 ```
-walmart-de-project/
+retail_end_to_end_project/
 ├── README.md
 ├── architecture/
 │   ├── architecture_diagram.png
@@ -111,8 +111,8 @@ walmart-de-project/
 │   ├── macros/generate_schema_name.sql
 │   ├── models/staging/         (Silver — sources.yml, schema.yml, stg_*)
 │   ├── models/marts/           (Gold — date dim, fact table, schema.yml)
-│   ├── snapshots/              (SCD2 — walmart_store_dim.sql)
+│   ├── snapshots/              (SCD2 — retail_store_dim.sql)
 │   └── tests/assert_positive_sales.sql   (custom singular test)
 ├── visualizations/
-│   ├── walmart_visualizations.py
-│   └── walmart_charts/  (10 pngs)
+│   ├── retail_visualizations.py
+│   └── retail_charts/  (10 pngs)
