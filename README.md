@@ -36,6 +36,7 @@ Walmart needs a single source of truth for weekly sales performance across store
 | **Transformation** | dbt Cloud | Silver staging views (typed/cleaned) → Gold dimensional model (SCD1 date dim, SCD2 store dim via `dbt snapshot`) |
 | **Visualization** | Python (`snowflake-connector-python`, `matplotlib`, `seaborn`) | Queries Gold schema directly, renders 10 publication-ready PNGs |
 
+
 ---
 
 ## 🗂️ Data Model
@@ -43,7 +44,7 @@ Walmart needs a single source of truth for weekly sales performance across store
 **Gold layer — star schema:**
 
 ```
-                     WALMART_DATE_DIM (SCD1)
+                  WALMART_DATE_DIM (SCD1)
                            │
                            ▼
 WALMART_STORE_DIM ──▶ WALMART_FACT_TABLE ◀── (sales, markdowns, weather, CPI)
@@ -51,9 +52,9 @@ WALMART_STORE_DIM ──▶ WALMART_FACT_TABLE ◀── (sales, markdowns, weat
     snapshot)
 ```
 
-- `WALMART_DATE_DIM` — one row per calendar date, holiday flag (SCD1: simple upsert)
-- `WALMART_STORE_DIM` — store type, size, tracked historically via `dbt snapshot` (SCD2: `dbt_valid_from` / `dbt_valid_to`)
-- `WALMART_FACT_TABLE` — weekly sales joined to weather, fuel price, CPI, unemployment, and 5 markdown columns
+- `WALMART_DATE_DIM` — one row per calendar date (~143 dates), holiday flag (SCD1: simple upsert)
+- `WALMART_STORE_DIM` — store type, size, tracked historically via `dbt snapshot` (SCD2: `dbt_valid_from` / `dbt_valid_to`). Snapshot grain is `store_id || '_' || dept_id` (~4,455 rows = 45 stores × 99 depts), using the `check` strategy on `store_type`/`store_size` with `invalidate_hard_deletes` enabled
+- `WALMART_FACT_TABLE` — weekly sales joined to weather, fuel price, CPI, unemployment, and 5 markdown columns; joins to the store dimension **point-in-time** via `store_date BETWEEN dbt_valid_from AND COALESCE(dbt_valid_to, '9999-12-31')`, so each sales row lands on the store version that was live that week
 
 ---
 
@@ -77,8 +78,6 @@ Every chart is a **single, full-width visualization** — no cluttered multi-pan
 ---
 
 
-
-
 ## 🧩 Key Design Decisions
 
 - **`NULL_IF` at the COPY INTO layer, not downstream in dbt** — markdown columns use the literal string `"NA"` for missing values. Handling this at load time keeps every downstream model clean without repeated `CASE WHEN` logic.
@@ -93,16 +92,27 @@ Every chart is a **single, full-width visualization** — no cluttered multi-pan
 ```
 walmart-de-project/
 ├── README.md
-├── architecture/architecture_diagram.png
+├── architecture/
+│   ├── architecture_diagram.png
+│   ├── data_model.png
+├── data/ 
+│   ├── stores.csv
+│   ├── fact.csv
+│   ├── department.csv                     
 ├── ingestion/upload_to_s3.py
-├── snowflake/*.sql
+├── snowflake/
+│   ├── 01_storage_integration.sql
+│   ├── 02_file_format_and_stage.sql
+│   ├── 03_create_bronze_tables.sql
+│   ├── 04_copy_into_bronze.sql
+│   └── 05_validate_counts.sql
 ├── dbt_project/
-│   ├── models/staging/        (Silver)
-│   ├── models/marts/          (Gold)
-│   └── snapshots/             (SCD2)
-└── visualizations/
-    ├── walmart_visualizations.py
-    └── walmart_charts/        (10 PNGs)
-```
-
----
+│   ├── dbt_project.yml
+│   ├── macros/generate_schema_name.sql
+│   ├── models/staging/         (Silver — sources.yml, schema.yml, stg_*)
+│   ├── models/marts/           (Gold — date dim, fact table, schema.yml)
+│   ├── snapshots/              (SCD2 — walmart_store_dim.sql)
+│   └── tests/assert_positive_sales.sql   (custom singular test)
+├── visualizations/
+│   ├── walmart_visualizations.py
+│   └── walmart_charts/  (10 pngs)
