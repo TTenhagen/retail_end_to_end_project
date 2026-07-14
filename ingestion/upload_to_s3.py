@@ -11,7 +11,7 @@ s3 = boto3.client(
     region_name = os.getenv("AWS_REGION", "us-east-1")
 )
 
-BUCKET = os.getenv("S3_BUCKET", "walmart-raw")
+BUCKET = os.getenv("S3_BUCKET", "retail-raw")
 
 files = (
     "stores/stores.csv":         "data/stores.csv",
