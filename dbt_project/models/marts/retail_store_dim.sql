@@ -1,8 +1,8 @@
-{% snapshot walmart_store_dim %}
+{% snapshot retail_store_dim %}
 
 {{ 
     config(
-        target_schema = "walmart_gold",
+        target_schema = "retail_gold",
         unique_key = "store_id || dept_id",
         strategy = "check",
         check_cols = ["store_type", "store_size"],
