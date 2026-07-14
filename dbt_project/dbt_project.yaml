@@ -1,7 +1,7 @@
-name: walmart_project 
+name: retail_project 
 version: "1.0.0" 
 config-version: 2 
-profile: walmart_profile 
+profile: retail_profile 
   
 model-paths: ["models"] 
 snapshot-paths: ["snapshots"] 
@@ -9,7 +9,7 @@ macro-paths: ["macros"]
 test-paths: ["tests"]
   
 models: 
-  walmart_project: 
+  retail_project: 
     staging: 
       +schema: SILVER 
       +materialized: view 
@@ -18,5 +18,5 @@ models:
       +materialized: table 
 
 snapshots:
-    walmart_project:
+    retail_project:
         +target_schema: GOLD
