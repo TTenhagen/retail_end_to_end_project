@@ -1,13 +1,13 @@
 version: 2
 models:
-    - name: walmart_date_dim
+    - name: retail_date_dim
       columns:
         - name: date_id
           tests: [unique, not_null]
         - name: store_date
           tests: [not_null]
 
-    - name: walmart_fact_table
+    - name: retail_fact_table
       columns:
         - name: store_id 
           tests: [not_null] 
