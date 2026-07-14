@@ -94,11 +94,11 @@ walmart-de-project/
 ├── README.md
 ├── architecture/
 │   ├── architecture_diagram.png
-│   ├── data_model.png
+│   └── data_model.png
 ├── data/ 
 │   ├── stores.csv
 │   ├── fact.csv
-│   ├── department.csv                     
+│   └── department.csv                     
 ├── ingestion/upload_to_s3.py
 ├── snowflake/
 │   ├── 01_storage_integration.sql
